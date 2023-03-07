@@ -1,7 +1,7 @@
 #ifndef _OSALTYPE_H
 #define _OSALTYPE_H
 
-
+#include <stdint.h>
 
 #ifndef NULL
 #define NULL (0)

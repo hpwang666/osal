@@ -2,7 +2,6 @@
 #include "stdlib.h"
 #include "string.h"
 #include "osal.h"
-#include <sys/time.h>
 static osalEnv_t osalEnv;
 
 extern uint64_t timeCounter1ms;
@@ -13,6 +12,7 @@ void osalInitEnv(void)
 	osalEnv->taskList= taskListInit();
 	osalEnv->msgBox = msgBoxInit();
 	timeCounter1ms=0;
+	printf("osalEnv: %x\r\n",osalEnv);
 }
 
 

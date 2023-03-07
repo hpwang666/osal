@@ -2,7 +2,6 @@
 #include "stdio.h"
 #include "tasks.h"
 #include "timers.h"
-#include <sys/time.h>
 
 
 #undef  _DEBUG
