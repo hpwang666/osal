@@ -2,18 +2,17 @@
 #include "stdlib.h"
 #include "string.h"
 #include "osal.h"
-#include <pthread.h>
 #include <sys/time.h>
 static osalEnv_t osalEnv;
 
-
+extern uint64_t timeCounter1ms;
 void osalInitEnv(void)
 {
 	osalEnv=(osalEnv_t) calloc(1,sizeof(struct osalEnv_st));
 	osalEnv->timerList = timerListInit();
 	osalEnv->taskList= taskListInit();
 	osalEnv->msgBox = msgBoxInit();
-	pthread_mutex_init(&(osalEnv->lock), NULL);
+	timeCounter1ms=0;
 }
 
 
@@ -36,16 +35,8 @@ int osalRunSystem()
 
 unsigned long long osalGetCurrentMsec()
 {
-	time_t           sec;
-    int       		msec;
-    struct timeval   tv;
-	unsigned long long t;
-
-    gettimeofday(&tv, NULL);
-    sec = tv.tv_sec;
-    msec = tv.tv_usec / 1000;
-	t = sec * 1000 + msec;
-	return t;
+	
+	return timeCounter1ms;
 }
 
 int osalAddTask(pTaskEventHandlerFn fn,int flag)
@@ -56,28 +47,22 @@ int osalAddTask(pTaskEventHandlerFn fn,int flag)
 
 int osalTicksUpdate()
 {
-	pthread_mutex_lock(&(osalEnv->lock)); 
 	timerUpdate( osalEnv->timerList ,osalEnv->taskList);
-	pthread_mutex_unlock(&(osalEnv->lock));
 	return 0;
 }
 
 int osalStartTimerEx(int taskID, int event_id, int timeout_value )
 {
-	pthread_mutex_lock(&(osalEnv->lock)); 
 	if((taskID) >= osalEnv->taskList->taskNum) {osalErr("not find task id");return 1;}
 	startTimerEx(osalEnv->timerList,taskID,event_id,timeout_value);
-	pthread_mutex_unlock(&(osalEnv->lock));
 	return 0;
 	
 }
 
  int osalClearTaskEvent(int task_id,int eventFlag)
 {
-	pthread_mutex_lock(&(osalEnv->lock)); 
 	clearTaskEvent(osalEnv->taskList,task_id,eventFlag);
 	stopTimerEx(osalEnv->timerList,task_id,eventFlag);//还未执行的也要清除
-	pthread_mutex_unlock(&(osalEnv->lock));
 	return 0;
 } 
 
@@ -142,6 +127,5 @@ int osalFree(void)
 		osalTask = task;
 	}
 	free(osalEnv->taskList);
-	pthread_mutex_destroy(&(osalEnv->lock)); 
 	return 0;
 }

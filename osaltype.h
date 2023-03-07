@@ -34,7 +34,6 @@ struct osalEnv_st {
     timerList_t  timerList;
 	taskList_t  taskList;
     msgBox_t	msgBox;
-	pthread_mutex_t lock;
 	char err[32];//record the latest err
 } ;
 
@@ -43,7 +42,7 @@ struct timerRec_st
 {
   int   id; 
   int 	eventFlag;
-  unsigned long long   timeout; //ms  
+  uint64_t   timeout; //ms  
   timerRec_t next;
   timerRec_t prev;
 } ;

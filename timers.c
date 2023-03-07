@@ -13,7 +13,8 @@
 	#define debug(...)
 #endif
 
-static unsigned long long    currentTime;
+extern uint64_t timeCounter1ms;
+static uint64_t currentTime;
 static void getCurentTime();
 
 timerList_t timerListInit(void) 
@@ -28,14 +29,8 @@ timerList_t timerListInit(void)
 
 static void getCurentTime(void)
 {
-    time_t           sec;
-    int       		msec;
-    struct timeval   tv;
-
-    gettimeofday(&tv, NULL);
-    sec = tv.tv_sec;
-    msec = tv.tv_usec / 1000;
-	currentTime = sec * 1000 + msec;
+    
+	currentTime = timeCounter1ms;
 }
 
 
