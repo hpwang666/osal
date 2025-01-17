@@ -44,7 +44,7 @@ unsigned long long osalGetCurrentMsec()
     gettimeofday(&tv, NULL);
     sec = tv.tv_sec;
     msec = tv.tv_usec / 1000;
-	t = sec * 1000 + msec;
+	t = sec * 1000LL + msec;
 	return t;
 }
 
